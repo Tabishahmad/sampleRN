@@ -1,0 +1,157 @@
+# codemagic.yaml — Trigger Jenkins from Codemagic (and optional local build)
+
+workflows:
+  jenkins_trigger_only:
+    name: Trigger Jenkins Job
+    instance_type: mac_mini_m2
+    max_build_duration: 20
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+
+    environment:
+      vars:
+        # REQUIRED: Set these in Codemagic UI (Environment variables)
+        JENKINS_URL: $JENKINS_URL              # e.g. https://jenkins.yourdomain.com
+        JENKINS_JOB: $JENKINS_JOB              # e.g. MyFolder/MyPipeline
+        JENKINS_USER: $JENKINS_USER            # e.g. tabish
+        JENKINS_API_TOKEN: $JENKINS_API_TOKEN  # Jenkins user API token (not password)
+        # Optional: if your job expects params, define here (comma-separated or set separately)
+        BUILD_PARAMS: ""                        # e.g. "BRANCH=main,ENV=uat"
+
+    scripts:
+      - name: Trigger Jenkins (with crumb support)
+        script: |
+          set -e
+          echo "Triggering Jenkins job: ${JENKINS_JOB} at ${JENKINS_URL}"
+
+          # Fetch crumb (if CSRF enabled)
+          CRUMB_HEADER=""
+          if curl -sf -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" "${JENKINS_URL}/crumbIssuer/api/json" >/dev/null 2>&1; then
+            CRUMB_JSON=$(curl -s -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" "${JENKINS_URL}/crumbIssuer/api/json")
+            CRUMB_FIELD=$(echo "$CRUMB_JSON" | /usr/bin/python3 -c "import sys,json;print(json.load(sys.stdin)['crumbRequestField'])")
+            CRUMB_VALUE=$(echo "$CRUMB_JSON" | /usr/bin/python3 -c "import sys,json;print(json.load(sys.stdin)['crumb'])")
+            CRUMB_HEADER="-H ${CRUMB_FIELD}:${CRUMB_VALUE}"
+            echo "Jenkins crumb fetched."
+          else
+            echo "Crumb endpoint not available or not required."
+          fi
+
+          # Build URL
+          JOB_URL="${JENKINS_URL}/job/${JENKINS_JOB}"
+          # Convert comma-separated BUILD_PARAMS into curl -F parameters
+          PARAMS_ARGS=""
+          if [ -n "$BUILD_PARAMS" ]; then
+            IFS=',' read -ra PAIRS <<< "$BUILD_PARAMS"
+            for KV in "${PAIRS[@]}"; do
+              KEY="${KV%%=*}"; VAL="${KV#*=}"
+              PARAMS_ARGS="${PARAMS_ARGS} -F ${KEY}=${VAL}"
+            done
+            TRIGGER_PATH="buildWithParameters"
+          else
+            TRIGGER_PATH="build"
+          fi
+
+          # Trigger
+          set -x
+          curl -sS -X POST ${CRUMB_HEADER} \
+            -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" \
+            ${PARAMS_ARGS} \
+            "${JOB_URL}/${TRIGGER_PATH}"
+          set +x
+          echo "Jenkins job triggered."
+
+  android_release_then_jenkins:
+    name: Android Build (RN) then Trigger Jenkins
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+
+    environment:
+      vars:
+        NODE_VERSION: "20.12.2"
+        JAVA_VERSION: "17"
+        # Jenkins vars
+        JENKINS_URL: $JENKINS_URL
+        JENKINS_JOB: $JENKINS_JOB
+        JENKINS_USER: $JENKINS_USER
+        JENKINS_API_TOKEN: $JENKINS_API_TOKEN
+
+    cache:
+      cache_paths:
+        - $HOME/.gradle/caches
+        - $HOME/.gradle/wrapper
+        - node_modules
+
+    scripts:
+      - name: Toolchains
+        script: |
+          echo "Node ${NODE_VERSION} • Java ${JAVA_VERSION}"
+          nvm install ${NODE_VERSION}
+          nvm use ${NODE_VERSION}
+          echo "export JAVA_HOME=$(/usr/libexec/java_home -v ${JAVA_VERSION})" >> $CM_ENV
+          java -version
+          node -v
+          npm -v
+
+      - name: Install deps
+        script: npm ci --no-audit --no-fund
+
+      - name: Accept Android licenses
+        script: yes | sdkmanager --licenses || true
+
+      - name: Build Android release (debug keystore fallback)
+        script: |
+          cd android
+          ./gradlew clean :app:assembleRelease --stacktrace
+
+      - name: Generate JS bundle + sourcemap (for upload in Jenkins)
+        script: |
+          mkdir -p android/app/build/generated/ci
+          npx react-native bundle \
+            --platform android \
+            --dev false \
+            --entry-file index.js \
+            --bundle-output android/app/build/generated/ci/index.android.bundle \
+            --sourcemap-output android/app/build/generated/ci/index.android.bundle.map
+
+      - name: Trigger Jenkins (with crumb)
+        script: |
+          set -e
+          CRUMB_HEADER=""
+          if curl -sf -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" "${JENKINS_URL}/crumbIssuer/api/json" >/dev/null 2>&1; then
+            CRUMB_JSON=$(curl -s -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" "${JENKINS_URL}/crumbIssuer/api/json")
+            CRUMB_FIELD=$(echo "$CRUMB_JSON" | /usr/bin/python3 -c "import sys,json;print(json.load(sys.stdin)['crumbRequestField'])")
+            CRUMB_VALUE=$(echo "$CRUMB_JSON" | /usr/bin/python3 -c "import sys,json;print(json.load(sys.stdin)['crumb'])")
+            CRUMB_HEADER="-H ${CRUMB_FIELD}:${CRUMB_VALUE}"
+          fi
+          JOB_URL="${JENKINS_URL}/job/${JENKINS_JOB}"
+          # Example params: pass bundle/map paths for Jenkins to upload
+          curl -sS -X POST ${CRUMB_HEADER} \
+            -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" \
+            -F BUNDLE_PATH=android/app/build/generated/ci/index.android.bundle \
+            -F MAP_PATH=android/app/build/generated/ci/index.android.bundle.map \
+            "${JOB_URL}/buildWithParameters"
+
+    artifacts:
+      - android/app/build/outputs/**/*.apk
+      - android/app/build/outputs/**/*.aab
+      - android/app/build/generated/ci/*
+
+    publishing:
+      email:
+        recipients:
+          - $CM_EMAIL
+        notify:
+          success: true
+          failure: true
