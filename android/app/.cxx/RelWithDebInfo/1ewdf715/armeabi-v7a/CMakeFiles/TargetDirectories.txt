@@ -1,0 +1,12 @@
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/CMakeFiles/appmodules.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/rnasyncstorage_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/rnasyncstorage_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/safeareacontext_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/safeareacontext_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/RNSentrySpec_autolinked_build/CMakeFiles/react_codegen_RNSentrySpec.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/RNSentrySpec_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/armeabi-v7a/RNSentrySpec_autolinked_build/CMakeFiles/rebuild_cache.dir

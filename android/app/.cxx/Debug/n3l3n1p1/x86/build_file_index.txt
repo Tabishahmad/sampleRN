@@ -1,0 +1,4 @@
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/CMakeLists.txt
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/node_modules/reactnative-plugin-appice-apm/android/build/generated/source/codegen/jni/CMakeLists.txt

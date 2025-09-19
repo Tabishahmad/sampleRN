@@ -1,0 +1,12 @@
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/CMakeFiles/appmodules.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/rnasyncstorage_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/rnasyncstorage_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/safeareacontext_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/safeareacontext_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/RNSentrySpec_autolinked_build/CMakeFiles/react_codegen_RNSentrySpec.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/RNSentrySpec_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/tabishahmad/Development/Semusi/ReactNative/APM/Samples/checkV142/android/app/.cxx/RelWithDebInfo/1ewdf715/x86_64/RNSentrySpec_autolinked_build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,63 @@
+# --- Node / RN ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.metro-health-check*
+.tmp/
+dist/
+build/
+
+# --- Android ---
+android/.gradle/
+android/.idea/
+android/local.properties
+android/app/build/
+android/build/
+# CI artefacts (APK/AAB, mapping, sourcemaps)
+android/app/outputs/
+android/app/build/outputs/
+android/app/build/intermediates/sourcemaps/
+android/app/build/generated/sourcemaps/
+*.apk
+*.aab
+# Keystores
+*.keystore
+*.jks
+!debug.keystore
+
+# --- iOS ---
+ios/Pods/
+ios/build/
+DerivedData/
+*.xcuserdatad
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+# (Keep Podfile & Podfile.lock committed)
+
+# --- Source maps / bundles (CI uploads; don’t commit) ---
+# Metro/Hermes outputs
+**/*.hbc
+index.android.bundle
+index.android.bundle.map
+index.ios.bundle
+index.ios.bundle.map
+# Generic maps from builds
+**/*.map
+
+# --- Fastlane (optional) ---
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots/
+**/fastlane/test_output/
+
+# --- Env / Secrets ---
+.env
+.env.*.local
+android/apm.properties
+
+# --- IDE / OS ---
+.DS_Store
+.vscode/
+*.iml
