@@ -162,10 +162,4 @@ workflows:
       - android/app/build/outputs/**/*.aab
       - android/app/build/generated/ci/*
 
-    publishing:
-      email:
-        recipients:
-          - $CM_EMAIL
-        notify:
-          success: true
-          failure: true
+    
