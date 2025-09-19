@@ -15,13 +15,13 @@ workflows:
 
     environment:
       vars:
-        # REQUIRED: Set these in Codemagic UI (Environment variables)
+        # REQUIRED: set these in Codemagic UI (Settings → Environment variables)
         JENKINS_URL: $JENKINS_URL              # e.g. https://jenkins.yourdomain.com
         JENKINS_JOB: $JENKINS_JOB              # e.g. MyFolder/MyPipeline
         JENKINS_USER: $JENKINS_USER            # e.g. tabish
         JENKINS_API_TOKEN: $JENKINS_API_TOKEN  # Jenkins user API token (not password)
-        # Optional: if your job expects params, define here (comma-separated or set separately)
-        BUILD_PARAMS: ""                        # e.g. "BRANCH=main,ENV=uat"
+        # (Optional) BUILD_PARAMS is NOT defined here to avoid validation errors.
+        # Define it in the Codemagic UI only when needed, as a string like: BRANCH=main,ENV=uat
 
     scripts:
       - name: Trigger Jenkins (with crumb support)
@@ -43,9 +43,9 @@ workflows:
 
           # Build URL
           JOB_URL="${JENKINS_URL}/job/${JENKINS_JOB}"
-          # Convert comma-separated BUILD_PARAMS into curl -F parameters
+          # Convert comma-separated BUILD_PARAMS into curl -F parameters (only if provided in UI)
           PARAMS_ARGS=""
-          if [ -n "$BUILD_PARAMS" ]; then
+          if [ -n "${BUILD_PARAMS:-}" ]; then
             IFS=',' read -ra PAIRS <<< "$BUILD_PARAMS"
             for KV in "${PAIRS[@]}"; do
               KEY="${KV%%=*}"; VAL="${KV#*=}"
@@ -81,11 +81,12 @@ workflows:
       vars:
         NODE_VERSION: "20.12.2"
         JAVA_VERSION: "17"
-        # Jenkins vars
+        # Jenkins vars (set in UI)
         JENKINS_URL: $JENKINS_URL
         JENKINS_JOB: $JENKINS_JOB
         JENKINS_USER: $JENKINS_USER
         JENKINS_API_TOKEN: $JENKINS_API_TOKEN
+        # (Optional) BUILD_PARAMS can be set in UI; not defined here.
 
     cache:
       cache_paths:
@@ -136,11 +137,24 @@ workflows:
             CRUMB_HEADER="-H ${CRUMB_FIELD}:${CRUMB_VALUE}"
           fi
           JOB_URL="${JENKINS_URL}/job/${JENKINS_JOB}"
-          # Example params: pass bundle/map paths for Jenkins to upload
+
+          # Optional Jenkins parameters from BUILD_PARAMS
+          PARAMS_ARGS=""
+          if [ -n "${BUILD_PARAMS:-}" ]; then
+            IFS=',' read -ra PAIRS <<< "$BUILD_PARAMS"
+            for KV in "${PAIRS[@]}"; do
+              KEY="${KV%%=*}"; VAL="${KV#*=}"
+              PARAMS_ARGS="${PARAMS_ARGS} -F ${KEY}=${VAL}"
+            done
+          fi
+
+          # Always pass bundle & map locations (Jenkins job can use them)
+          PARAMS_ARGS="${PARAMS_ARGS} -F BUNDLE_PATH=android/app/build/generated/ci/index.android.bundle"
+          PARAMS_ARGS="${PARAMS_ARGS} -F MAP_PATH=android/app/build/generated/ci/index.android.bundle.map"
+
           curl -sS -X POST ${CRUMB_HEADER} \
             -u "${JENKINS_USER}:${JENKINS_API_TOKEN}" \
-            -F BUNDLE_PATH=android/app/build/generated/ci/index.android.bundle \
-            -F MAP_PATH=android/app/build/generated/ci/index.android.bundle.map \
+            ${PARAMS_ARGS} \
             "${JOB_URL}/buildWithParameters"
 
     artifacts:
